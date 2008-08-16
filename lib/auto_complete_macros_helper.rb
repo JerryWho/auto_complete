@@ -69,6 +69,8 @@ module AutoCompleteMacrosHelper
     js_options[:paramName]  = "'#{options[:param_name]}'" if options[:param_name]
     js_options[:frequency]  = "#{options[:frequency]}" if options[:frequency]
     js_options[:method]     = "'#{options[:method].to_s}'" if options[:method]
+    
+    js_options[:select]     = "'autocomplete_values'" if options[:append]
 
     { :after_update_element => :afterUpdateElement, 
       :on_show => :onShow, :on_hide => :onHide, :min_chars => :minChars }.each do |k,v|
@@ -93,9 +95,13 @@ module AutoCompleteMacrosHelper
   #
   # The auto_complete_result can of course also be called from a view belonging to the 
   # auto_complete action if you need to decorate it further.
-  def auto_complete_result(entries, field, phrase = nil)
+  def auto_complete_result(entries, field, phrase = nil, prepend = "")
     return unless entries
-    items = entries.map { |entry| content_tag("li", phrase ? highlight(entry[field], phrase) : h(entry[field])) }
+    fullfield = "" if fullfield.nil?
+    items = entries.map do |entry| 
+      content_tag("li", phrase ? highlight(entry[field], phrase) : h(entry[field])\
+        + content_tag('span', prepend + " " + h(entry[field]), :style => "display: none", :class => "autocomplete_values" )) 
+    end
     content_tag("ul", items.uniq)
   end
   
