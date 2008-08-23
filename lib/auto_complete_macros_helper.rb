@@ -116,7 +116,6 @@ module AutoCompleteMacrosHelper
     else
       tag_name = "#{object}_#{method}"
     end
-    #(completion_options[:skip_style] ? "" : auto_complete_stylesheet) +
     content_for :styles, auto_complete_stylesheet unless completion_options[:skip_style]
     text_field(object, method, tag_options) +
     content_tag("div", "", :id => tag_name + "_auto_complete", :class => "auto_complete") +
